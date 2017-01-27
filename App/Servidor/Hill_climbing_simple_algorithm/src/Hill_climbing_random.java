@@ -28,6 +28,7 @@ public class Hill_climbing_random {
 
     public float algorithm_random(){
         int saltoValue = 0;
+        int temporalSaltoValue = 0;
         int contadorColina = 0;
         float valueEAD ;
         float temporalValue = 0;
@@ -35,7 +36,7 @@ public class Hill_climbing_random {
         float valuepartialValue;
         valuepartialValue = this.partialValueMemory;
         for (int i = 0; i < this.random; i++) {
-            for (int j = saltoValue; i < listHit.size(); i++) {
+            for (int j = saltoValue; j < listHit.size(); j++) {
                 contadorColina = j;
                 valueEAD = EAD(this.listHit.get(i), this.listMiss.get(i));
                 valueMemory = (this.frequency * valueEAD);
@@ -53,7 +54,8 @@ public class Hill_climbing_random {
                 valuepartialValue = this.partialValueMemory;
 
             }
-            saltoValue = (int) (contadorColina + (Math.random() * (listHit.size() - contadorColina)));
+            temporalSaltoValue = saltoValue;
+            saltoValue = generarRandomSaltos(contadorColina,listHit.size(),temporalSaltoValue);
             temporalValue = valueMemory;
             valuepartialValue = this.partialValueMemory;
 
@@ -64,5 +66,18 @@ public class Hill_climbing_random {
 
     public float EAD(float hit, float miss){
         return (hit*this.cd + miss*this.bd);
+    }
+
+    public int generarRandomSaltos(int ContadorColina,int sizeHit,int temporalSaltoValue){
+        /*
+        * esta funcion sirve para generar valores randomicos diferentes en cada iteracion
+        * */
+        int saltoValue = (int) (ContadorColina + (Math.random() * (sizeHit - ContadorColina)));
+        while (saltoValue == temporalSaltoValue){
+            saltoValue = (int) (ContadorColina + (Math.random() * (sizeHit - ContadorColina)));
+
+        }
+        return saltoValue;
+
     }
 }
