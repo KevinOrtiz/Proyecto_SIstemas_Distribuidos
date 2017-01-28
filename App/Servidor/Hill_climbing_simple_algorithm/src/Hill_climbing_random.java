@@ -39,16 +39,15 @@ public class Hill_climbing_random {
             for (int j = saltoValue; j < listHit.size(); j++) {
                 contadorColina = j;
                 valueEAD = EAD(this.listHit.get(i), this.listMiss.get(i));
-                valueMemory = (this.frequency * valueEAD);
+                valueMemory = this.frequency * valueEAD;
                 valuepartialValue = valuepartialValue + valueMemory;
                 /*
                 * Condicion para obtener el tamano optimo de la memoria de un workload se basa en la siguiente condicion
                 * Suma de los valores parciales de memoria sea menos o igual al tamano de la cache en total, y que el valor
                 * actual sea mayor o igual al valor pasado de la memoria obtenida
                 * */
-                if (valuepartialValue < temporalValue && valuepartialValue <= this.sizeCache && valuepartialValue >= this.partialValueMemory) {
+                if (valueMemory < temporalValue && valuepartialValue <= this.sizeCache &&  valueMemory >= this.partialValueMemory) {
                     break;
-
                 }
                 temporalValue = valueMemory;
                 valuepartialValue = this.partialValueMemory;
@@ -60,7 +59,7 @@ public class Hill_climbing_random {
             valuepartialValue = this.partialValueMemory;
 
         }
-            return valueMemory;
+            return temporalValue;
 
     }
 

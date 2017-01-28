@@ -32,21 +32,21 @@ public class Hill_climbing_simple {
         valuepartialValue = this.partialValueMemory;
         for (int i = 0; i < listHit.size(); i++) {
             valueEAD = EAD(this.listHit.get(i),this.listMiss.get(i));
-            valueMemory = (this.frequency * valueEAD);
+            valueMemory = this.frequency * valueEAD;
             valuepartialValue = valuepartialValue + valueMemory;
             /*
             * Condicion para obtener el tamano optimo de la memoria de un workload se basa en la siguiente condicion
             * Suma de los valores parciales de memoria sea menos o igual al tamano de la cache en total, y que el valor
             * actual sea mayor o igual al valor pasado de la memoria obtenida
             * */
-            if (valuepartialValue < temporalValue && valuepartialValue <= this.sizeCache && valuepartialValue >= this.partialValueMemory ){
-                return valueMemory;
+            if (valueMemory < temporalValue && valuepartialValue <= this.sizeCache &&  valueMemory >= this.partialValueMemory ){
+                return temporalValue;
 
             }
             temporalValue = valueMemory;
             valuepartialValue = this.partialValueMemory;
         }
-        return valueMemory;
+        return temporalValue;
 
     }
 
