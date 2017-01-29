@@ -12,7 +12,7 @@ public class Hill_climbing_simple {
     private ArrayList<Float> listMiss = new ArrayList<Float>();
     private int frequency;
 
-    public Hill_climbing_simple(float bd, float cd, float sizeCache, float partialValueMemory, ArrayList<Float> listHit, ArrayList<Float> listMiss,float m,int frequency){
+    public Hill_climbing_simple(float bd, float cd, float sizeCache, ArrayList<Float> listHit, ArrayList<Float> listMiss,float m,int frequency){
         this.partialValueMemory = m;
         this.sizeCache = sizeCache;
         this.bd = bd;

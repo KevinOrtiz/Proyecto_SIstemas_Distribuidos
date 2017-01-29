@@ -13,7 +13,7 @@ public class Hill_climbing_random {
     private int frequency;
     private int random;
 
-    public Hill_climbing_random(float bd, float cd, float sizeCache, float partialValueMemory, ArrayList<Float> listHit, ArrayList<Float> listMiss,float m,int frequency,int random){
+    public Hill_climbing_random(float bd, float cd, float sizeCache, ArrayList<Float> listHit, ArrayList<Float> listMiss,float m,int frequency,int random){
         this.partialValueMemory = m;
         this.sizeCache = sizeCache;
         this.bd = bd;

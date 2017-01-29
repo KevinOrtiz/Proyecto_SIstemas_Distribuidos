@@ -50,6 +50,8 @@ if __name__ == '__main__':
 	ap.add_argument("-cd","--tiempo_miss",required=False,help="Tiempo de los miss en microsegundos")
 	ap.add_argument("-w","--pesos_workload",required=False,help="Pesos que se asignan a los workloads")
 	ap.add_argument("-M","--total_cache",required=True,help="Tamano total de la cache en GB")
+	ap.add_argument("-P","--puerto",required=True,help="puerto donde se encuentra activo el servidor")
+
 	args = vars(ap.parse_args())
 	Salir = 1
 	if (args["frecuencia"] is None ):
