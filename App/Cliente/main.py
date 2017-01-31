@@ -1,7 +1,16 @@
+
 import pandas as pd
 import numpy as np
 import os
 import argparse
+import sys, glob
+sys.path.append('gen-py')
+from algoritmos import servicioPartioningMemory
+from algoritmos.ttypes import *
+from thrift import Thrift
+from thrift.transport import TSocket
+from thrift.transport import TTransport
+from thrift.protocol import TBinaryProtocol
 
 def loadCsv(namefile):
 	try:
@@ -15,6 +24,7 @@ def getFileCollection(namedirectory):
 	try:
 		lista = []
 		for filename in os.listdir(namedirectory):
+			print(filename)
 			if filename.endswith("csv"):
 				lista.append(loadCsv(namedirectory+filename))
 		return lista
@@ -54,61 +64,104 @@ if __name__ == '__main__':
 
 	args = vars(ap.parse_args())
 	Salir = 1
-	if (args["frecuencia"] is None ):
-		frecuencia = 233
+	try:
+		
+		if (args["frecuencia"] is None ):
+			frecuencia = 0.12221
 
-	else:
-		frecuencia = int(args["frecuencia"])
+		else:
+			frecuencia = int(args["frecuencia"])
 
-	if (args["tiempo_hits"] is None):
-		tiempo_hits = 12.32
+		if (args["tiempo_hits"] is None):
+			tiempo_hits = 0.12234
 
-	else:
-		tiempo_hits = float(args["tiempo_hits"])
+		else:
+			tiempo_hits = float(args["tiempo_hits"])
 
-	if (args["tiempo_miss"] is None):
-		tiempo_miss = 20.21
-	else:
-		tiempo_miss = float(args["tiempo_miss"])
+		if (args["tiempo_miss"] is None):
+			tiempo_miss = 0.23334
+		else:
+			tiempo_miss = float(args["tiempo_miss"])
 
-	if (args["pesos_workload"] is None):
-		pesos_workload = 21
+		if (args["pesos_workload"] is None):
+			pesos_workload = 21
 
-	else:
-		pesos_workload = args["pesos_workload"]
+		else:
+			pesos_workload = args["pesos_workload"]
 
-	print(frecuencia,tiempo_hits,tiempo_miss,pesos_workload,args["host"])
+		iMemoryValue = 0
+		i = 1
 
-	listFile = getFileCollection(args["ruta_directorio"])
-	if (listFile != False):
-		while(Salir != 0):
-			print "Usted podra probar dos algoritmos"
-			print "1.-Hill climbing simple"
-			print "2.-Hill climbing de reinicio aleatorio"
-			print "3.-Salir"
-			opcionAlgoritmo = raw_input("ingrese las opcion(debe ser numerica)")
-			if (opcionAlgoritmo == '1'):
-				for x in listFile:
+		sizeAcumulateMemory = 0
+
+		print(frecuencia,tiempo_hits,tiempo_miss,pesos_workload,args["host"],int(args["total_cache"]),args["puerto"])
+
+		transport = TSocket.TSocket(args['host'],int(args['puerto']))
+
+		transportBuffering = TTransport.TBufferedTransport(transport)
+
+		protocolBinary = TBinaryProtocol.TBinaryProtocol(transportBuffering)
+
+		client = servicioPartioningMemory.Client(protocolBinary)
+
+		transportBuffering.open()
+
+		listFile = getFileCollection(args["ruta_directorio"])
+		if (listFile != False):
+			while(Salir != 0):
+				print "Usted podra probar dos algoritmos"
+				print "1.-Hill climbing simple"
+				print "2.-Hill climbing de reinicio aleatorio"
+				print "3.-Salir"
+				opcionAlgoritmo = raw_input("ingrese las opcion(debe ser numerica)")
+				if (opcionAlgoritmo == '1'):
+					i = 1
+					for x in listFile:
 					## aqui va la funcion que manda dos listas ,lista de hit , lista de miss, parametros bd,cd, frecuencia
-					listHit = x['hit'].tolist()
-					listMiss = x['miss'].tolist()
-					print(listHit)
-					print(listMiss)
+						listMiss = x['miss'].tolist()
+						valueMemory = client.hillClimbingSimple(listMiss,frecuencia,int(args['total_cache']),iMemoryValue,sizeAcumulateMemory,tiempo_hits,tiempo_miss)
+						iMemoryValue = valueMemory
+						sizeAcumulateMemory = sizeAcumulateMemory + valueMemory
+						print("********************************************** \n")
+						print("workload_" + str(i) + "---> valueMemory:" + str(valueMemory))
+						print("\n")
+						print("size_Acumulate_Memory------>:" + str(sizeAcumulateMemory))
+						print("\n")
+						print("*********************************************** \n")	
+						i = i + 1		
 					'''
 					En esta parte de declara el metodo remoto que sera la funcion Hill climbing 
 					que tendra como parametro frecuencia,cd,bd,M,m,listaHit,listMiss 
 					y retorna el valor de asignacion en memoria cache m{i,1,2,3,4}
 					'''
 
-			elif (opcionAlgoritmo == '2'):
-				 for x in listFile:
-				 	## aqui va la funcion que manda dos listas ,lista de hit , lista de miss, parametros bd,cd, frecuencia
-				 	pass
+				elif (opcionAlgoritmo == '2'):
+					sizeAcumulateMemory = 0
+					iMemoryValue = 0
+					i = 1
+					randomSaltos = raw_input("Ingrese el numero de saltos que desea que realice el algoritmo")
+					for x in listFile:
+				 		## aqui va la funcion que manda dos listas ,lista de hit , lista de miss, parametros bd,cd, frecuencia
+				 		listMiss = x['miss'].tolist()
+				 		valueMemory = client.hillClimbingRandom(listMiss,frecuencia,int(args['total_cache']),iMemoryValue,sizeAcumulateMemory,tiempo_hits,tiempo_miss,int(randomSaltos))
+				 		iMemoryValue = valueMemory
+				 		sizeAcumulateMemory = sizeAcumulateMemory + valueMemory
+					 	print("************************************************ \n")
+					 	print("workload_"+ str(i) + "----> valueMemory:" + str(valueMemory))
+					 	print("\n")
+					 	print("size_Acumulate_Memory--->" + str(sizeAcumulateMemory))
+				 		print("\n")
+				 		print("************************************************* \n")
+				 		i = i + 1
 
-			elif (opcionAlgoritmo == '3'):
-				print "Servicio Finalizado"
-				Salir = 0
-			else:
-				print "Ingrese una opcion correcta!"
+				elif (opcionAlgoritmo == '3'):
+					print "Servicio Finalizado"
+					Salir = 0
+					transportBuffering.close()
+
+				else:
+					print "Ingrese una opcion correcta!"
 	
 
+	except Thrift.TException, tx:
+		print '%s' % (tx.message)
