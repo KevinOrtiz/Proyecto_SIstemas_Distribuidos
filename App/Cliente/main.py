@@ -94,7 +94,7 @@ if __name__ == '__main__':
 
 		sizeAcumulateMemory = 0
 
-		print(frecuencia,tiempo_hits,tiempo_miss,pesos_workload,args["host"],int(args["total_cache"]),args["puerto"])
+		print(frecuencia,tiempo_hits,tiempo_miss,pesos_workload,args["host"],float(args["total_cache"]),args["puerto"])
 
 		transport = TSocket.TSocket(args['host'],int(args['puerto']))
 
@@ -109,6 +109,8 @@ if __name__ == '__main__':
 		listFile = getFileCollection(args["ruta_directorio"])
 		if (listFile != False):
 			while(Salir != 0):
+				iMemoryValue = 0
+				sizeAcumulateMemory = 0
 				print "Usted podra probar dos algoritmos"
 				print "1.-Hill climbing simple"
 				print "2.-Hill climbing de reinicio aleatorio"
@@ -120,16 +122,16 @@ if __name__ == '__main__':
 					## aqui va la funcion que manda dos listas ,lista de hit , lista de miss, parametros bd,cd, frecuencia
 						listMiss = x['miss'].tolist()
 						listCache = x['cache'].tolist()
-						valueMemory = client.hillClimbingSimple(listMiss,listCache,frecuencia,int(args['total_cache']),iMemoryValue,sizeAcumulateMemory,tiempo_hits,tiempo_miss)
+						valueMemory = client.hillClimbingSimple(listMiss,listCache,frecuencia,float(args['total_cache']),iMemoryValue,sizeAcumulateMemory,tiempo_hits,tiempo_miss)
 						iMemoryValue = valueMemory
 						sizeAcumulateMemory = sizeAcumulateMemory + valueMemory
-						print("********************************************** \n")
-						print("workload_" + str(i) + "---> valueMemory:" + str(valueMemory))
-						print("\n")
-						print("size_Acumulate_Memory------>:" + str(sizeAcumulateMemory))
-						print("\n")
-						print("*********************************************** \n")	
-						i = i + 1		
+						print("************************************************ \n")
+					 	print("workload_"+ str(i) + "----> valueMemory:" + str(valueMemory))
+					 	print("\n")
+					 	print("size_Acumulate_Memory--->" + str(sizeAcumulateMemory))
+				 		print("\n")
+				 		print("************************************************* \n")
+				 		i = i + 1
 					'''
 					En esta parte de declara el metodo remoto que sera la funcion Hill climbing 
 					que tendra como parametro frecuencia,cd,bd,M,m,listaHit,listMiss 
@@ -145,7 +147,7 @@ if __name__ == '__main__':
 				 		## aqui va la funcion que manda dos listas ,lista de hit , lista de miss, parametros bd,cd, frecuencia
 				 		listMiss = x['miss'].tolist()
 				 		listCache = x['cache'].tolist()
-				 		valueMemory = client.hillClimbingRandom(listMiss,listCache,frecuencia,int(args['total_cache']),iMemoryValue,sizeAcumulateMemory,tiempo_hits,tiempo_miss,int(randomSaltos))
+				 		valueMemory = client.hillClimbingRandom(listMiss,listCache,frecuencia,float(args['total_cache']),iMemoryValue,sizeAcumulateMemory,tiempo_hits,tiempo_miss,int(randomSaltos))
 				 		iMemoryValue = valueMemory
 				 		sizeAcumulateMemory = sizeAcumulateMemory + valueMemory
 					 	print("************************************************ \n")
