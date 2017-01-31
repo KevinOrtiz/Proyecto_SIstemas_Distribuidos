@@ -19,10 +19,11 @@ except:
 
 
 class Iface:
-  def hillClimbingSimple(self, listMiss, frequency, sizeCacheMemory, iMemoryValue, sizeAcumulateMemory, bd, cd):
+  def hillClimbingSimple(self, listMiss, listCache, frequency, sizeCacheMemory, iMemoryValue, sizeAcumulateMemory, bd, cd):
     """
     Parameters:
      - listMiss
+     - listCache
      - frequency
      - sizeCacheMemory
      - iMemoryValue
@@ -32,10 +33,11 @@ class Iface:
     """
     pass
 
-  def hillClimbingRandom(self, listMIss, frequency, sizeCacheMemory, iMemoryValue, sizeAcumulateMemory, bd, cd, randomSaltos):
+  def hillClimbingRandom(self, listMIss, listCache, frequency, sizeCacheMemory, iMemoryValue, sizeAcumulateMemory, bd, cd, randomSaltos):
     """
     Parameters:
      - listMIss
+     - listCache
      - frequency
      - sizeCacheMemory
      - iMemoryValue
@@ -54,10 +56,11 @@ class Client(Iface):
       self._oprot = oprot
     self._seqid = 0
 
-  def hillClimbingSimple(self, listMiss, frequency, sizeCacheMemory, iMemoryValue, sizeAcumulateMemory, bd, cd):
+  def hillClimbingSimple(self, listMiss, listCache, frequency, sizeCacheMemory, iMemoryValue, sizeAcumulateMemory, bd, cd):
     """
     Parameters:
      - listMiss
+     - listCache
      - frequency
      - sizeCacheMemory
      - iMemoryValue
@@ -65,13 +68,14 @@ class Client(Iface):
      - bd
      - cd
     """
-    self.send_hillClimbingSimple(listMiss, frequency, sizeCacheMemory, iMemoryValue, sizeAcumulateMemory, bd, cd)
+    self.send_hillClimbingSimple(listMiss, listCache, frequency, sizeCacheMemory, iMemoryValue, sizeAcumulateMemory, bd, cd)
     return self.recv_hillClimbingSimple()
 
-  def send_hillClimbingSimple(self, listMiss, frequency, sizeCacheMemory, iMemoryValue, sizeAcumulateMemory, bd, cd):
+  def send_hillClimbingSimple(self, listMiss, listCache, frequency, sizeCacheMemory, iMemoryValue, sizeAcumulateMemory, bd, cd):
     self._oprot.writeMessageBegin('hillClimbingSimple', TMessageType.CALL, self._seqid)
     args = hillClimbingSimple_args()
     args.listMiss = listMiss
+    args.listCache = listCache
     args.frequency = frequency
     args.sizeCacheMemory = sizeCacheMemory
     args.iMemoryValue = iMemoryValue
@@ -97,10 +101,11 @@ class Client(Iface):
       return result.success
     raise TApplicationException(TApplicationException.MISSING_RESULT, "hillClimbingSimple failed: unknown result")
 
-  def hillClimbingRandom(self, listMIss, frequency, sizeCacheMemory, iMemoryValue, sizeAcumulateMemory, bd, cd, randomSaltos):
+  def hillClimbingRandom(self, listMIss, listCache, frequency, sizeCacheMemory, iMemoryValue, sizeAcumulateMemory, bd, cd, randomSaltos):
     """
     Parameters:
      - listMIss
+     - listCache
      - frequency
      - sizeCacheMemory
      - iMemoryValue
@@ -109,13 +114,14 @@ class Client(Iface):
      - cd
      - randomSaltos
     """
-    self.send_hillClimbingRandom(listMIss, frequency, sizeCacheMemory, iMemoryValue, sizeAcumulateMemory, bd, cd, randomSaltos)
+    self.send_hillClimbingRandom(listMIss, listCache, frequency, sizeCacheMemory, iMemoryValue, sizeAcumulateMemory, bd, cd, randomSaltos)
     return self.recv_hillClimbingRandom()
 
-  def send_hillClimbingRandom(self, listMIss, frequency, sizeCacheMemory, iMemoryValue, sizeAcumulateMemory, bd, cd, randomSaltos):
+  def send_hillClimbingRandom(self, listMIss, listCache, frequency, sizeCacheMemory, iMemoryValue, sizeAcumulateMemory, bd, cd, randomSaltos):
     self._oprot.writeMessageBegin('hillClimbingRandom', TMessageType.CALL, self._seqid)
     args = hillClimbingRandom_args()
     args.listMIss = listMIss
+    args.listCache = listCache
     args.frequency = frequency
     args.sizeCacheMemory = sizeCacheMemory
     args.iMemoryValue = iMemoryValue
@@ -171,7 +177,7 @@ class Processor(Iface, TProcessor):
     iprot.readMessageEnd()
     result = hillClimbingSimple_result()
     try:
-      result.success = self._handler.hillClimbingSimple(args.listMiss, args.frequency, args.sizeCacheMemory, args.iMemoryValue, args.sizeAcumulateMemory, args.bd, args.cd)
+      result.success = self._handler.hillClimbingSimple(args.listMiss, args.listCache, args.frequency, args.sizeCacheMemory, args.iMemoryValue, args.sizeAcumulateMemory, args.bd, args.cd)
       msg_type = TMessageType.REPLY
     except (TTransport.TTransportException, KeyboardInterrupt, SystemExit):
       raise
@@ -190,7 +196,7 @@ class Processor(Iface, TProcessor):
     iprot.readMessageEnd()
     result = hillClimbingRandom_result()
     try:
-      result.success = self._handler.hillClimbingRandom(args.listMIss, args.frequency, args.sizeCacheMemory, args.iMemoryValue, args.sizeAcumulateMemory, args.bd, args.cd, args.randomSaltos)
+      result.success = self._handler.hillClimbingRandom(args.listMIss, args.listCache, args.frequency, args.sizeCacheMemory, args.iMemoryValue, args.sizeAcumulateMemory, args.bd, args.cd, args.randomSaltos)
       msg_type = TMessageType.REPLY
     except (TTransport.TTransportException, KeyboardInterrupt, SystemExit):
       raise
@@ -210,6 +216,7 @@ class hillClimbingSimple_args:
   """
   Attributes:
    - listMiss
+   - listCache
    - frequency
    - sizeCacheMemory
    - iMemoryValue
@@ -221,16 +228,18 @@ class hillClimbingSimple_args:
   thrift_spec = (
     None, # 0
     (1, TType.LIST, 'listMiss', (TType.DOUBLE,None), None, ), # 1
-    (2, TType.DOUBLE, 'frequency', None, None, ), # 2
-    (3, TType.DOUBLE, 'sizeCacheMemory', None, None, ), # 3
-    (4, TType.DOUBLE, 'iMemoryValue', None, None, ), # 4
-    (5, TType.DOUBLE, 'sizeAcumulateMemory', None, None, ), # 5
-    (6, TType.DOUBLE, 'bd', None, None, ), # 6
-    (7, TType.DOUBLE, 'cd', None, None, ), # 7
+    (2, TType.LIST, 'listCache', (TType.DOUBLE,None), None, ), # 2
+    (3, TType.DOUBLE, 'frequency', None, None, ), # 3
+    (4, TType.DOUBLE, 'sizeCacheMemory', None, None, ), # 4
+    (5, TType.DOUBLE, 'iMemoryValue', None, None, ), # 5
+    (6, TType.DOUBLE, 'sizeAcumulateMemory', None, None, ), # 6
+    (7, TType.DOUBLE, 'bd', None, None, ), # 7
+    (8, TType.DOUBLE, 'cd', None, None, ), # 8
   )
 
-  def __init__(self, listMiss=None, frequency=None, sizeCacheMemory=None, iMemoryValue=None, sizeAcumulateMemory=None, bd=None, cd=None,):
+  def __init__(self, listMiss=None, listCache=None, frequency=None, sizeCacheMemory=None, iMemoryValue=None, sizeAcumulateMemory=None, bd=None, cd=None,):
     self.listMiss = listMiss
+    self.listCache = listCache
     self.frequency = frequency
     self.sizeCacheMemory = sizeCacheMemory
     self.iMemoryValue = iMemoryValue
@@ -258,31 +267,41 @@ class hillClimbingSimple_args:
         else:
           iprot.skip(ftype)
       elif fid == 2:
-        if ftype == TType.DOUBLE:
-          self.frequency = iprot.readDouble()
+        if ftype == TType.LIST:
+          self.listCache = []
+          (_etype9, _size6) = iprot.readListBegin()
+          for _i10 in xrange(_size6):
+            _elem11 = iprot.readDouble()
+            self.listCache.append(_elem11)
+          iprot.readListEnd()
         else:
           iprot.skip(ftype)
       elif fid == 3:
         if ftype == TType.DOUBLE:
-          self.sizeCacheMemory = iprot.readDouble()
+          self.frequency = iprot.readDouble()
         else:
           iprot.skip(ftype)
       elif fid == 4:
         if ftype == TType.DOUBLE:
-          self.iMemoryValue = iprot.readDouble()
+          self.sizeCacheMemory = iprot.readDouble()
         else:
           iprot.skip(ftype)
       elif fid == 5:
         if ftype == TType.DOUBLE:
-          self.sizeAcumulateMemory = iprot.readDouble()
+          self.iMemoryValue = iprot.readDouble()
         else:
           iprot.skip(ftype)
       elif fid == 6:
         if ftype == TType.DOUBLE:
-          self.bd = iprot.readDouble()
+          self.sizeAcumulateMemory = iprot.readDouble()
         else:
           iprot.skip(ftype)
       elif fid == 7:
+        if ftype == TType.DOUBLE:
+          self.bd = iprot.readDouble()
+        else:
+          iprot.skip(ftype)
+      elif fid == 8:
         if ftype == TType.DOUBLE:
           self.cd = iprot.readDouble()
         else:
@@ -300,32 +319,39 @@ class hillClimbingSimple_args:
     if self.listMiss is not None:
       oprot.writeFieldBegin('listMiss', TType.LIST, 1)
       oprot.writeListBegin(TType.DOUBLE, len(self.listMiss))
-      for iter6 in self.listMiss:
-        oprot.writeDouble(iter6)
+      for iter12 in self.listMiss:
+        oprot.writeDouble(iter12)
+      oprot.writeListEnd()
+      oprot.writeFieldEnd()
+    if self.listCache is not None:
+      oprot.writeFieldBegin('listCache', TType.LIST, 2)
+      oprot.writeListBegin(TType.DOUBLE, len(self.listCache))
+      for iter13 in self.listCache:
+        oprot.writeDouble(iter13)
       oprot.writeListEnd()
       oprot.writeFieldEnd()
     if self.frequency is not None:
-      oprot.writeFieldBegin('frequency', TType.DOUBLE, 2)
+      oprot.writeFieldBegin('frequency', TType.DOUBLE, 3)
       oprot.writeDouble(self.frequency)
       oprot.writeFieldEnd()
     if self.sizeCacheMemory is not None:
-      oprot.writeFieldBegin('sizeCacheMemory', TType.DOUBLE, 3)
+      oprot.writeFieldBegin('sizeCacheMemory', TType.DOUBLE, 4)
       oprot.writeDouble(self.sizeCacheMemory)
       oprot.writeFieldEnd()
     if self.iMemoryValue is not None:
-      oprot.writeFieldBegin('iMemoryValue', TType.DOUBLE, 4)
+      oprot.writeFieldBegin('iMemoryValue', TType.DOUBLE, 5)
       oprot.writeDouble(self.iMemoryValue)
       oprot.writeFieldEnd()
     if self.sizeAcumulateMemory is not None:
-      oprot.writeFieldBegin('sizeAcumulateMemory', TType.DOUBLE, 5)
+      oprot.writeFieldBegin('sizeAcumulateMemory', TType.DOUBLE, 6)
       oprot.writeDouble(self.sizeAcumulateMemory)
       oprot.writeFieldEnd()
     if self.bd is not None:
-      oprot.writeFieldBegin('bd', TType.DOUBLE, 6)
+      oprot.writeFieldBegin('bd', TType.DOUBLE, 7)
       oprot.writeDouble(self.bd)
       oprot.writeFieldEnd()
     if self.cd is not None:
-      oprot.writeFieldBegin('cd', TType.DOUBLE, 7)
+      oprot.writeFieldBegin('cd', TType.DOUBLE, 8)
       oprot.writeDouble(self.cd)
       oprot.writeFieldEnd()
     oprot.writeFieldStop()
@@ -338,6 +364,7 @@ class hillClimbingSimple_args:
   def __hash__(self):
     value = 17
     value = (value * 31) ^ hash(self.listMiss)
+    value = (value * 31) ^ hash(self.listCache)
     value = (value * 31) ^ hash(self.frequency)
     value = (value * 31) ^ hash(self.sizeCacheMemory)
     value = (value * 31) ^ hash(self.iMemoryValue)
@@ -425,6 +452,7 @@ class hillClimbingRandom_args:
   """
   Attributes:
    - listMIss
+   - listCache
    - frequency
    - sizeCacheMemory
    - iMemoryValue
@@ -437,17 +465,19 @@ class hillClimbingRandom_args:
   thrift_spec = (
     None, # 0
     (1, TType.LIST, 'listMIss', (TType.DOUBLE,None), None, ), # 1
-    (2, TType.DOUBLE, 'frequency', None, None, ), # 2
-    (3, TType.DOUBLE, 'sizeCacheMemory', None, None, ), # 3
-    (4, TType.DOUBLE, 'iMemoryValue', None, None, ), # 4
-    (5, TType.DOUBLE, 'sizeAcumulateMemory', None, None, ), # 5
-    (6, TType.DOUBLE, 'bd', None, None, ), # 6
-    (7, TType.DOUBLE, 'cd', None, None, ), # 7
-    (8, TType.I32, 'randomSaltos', None, None, ), # 8
+    (2, TType.LIST, 'listCache', (TType.DOUBLE,None), None, ), # 2
+    (3, TType.DOUBLE, 'frequency', None, None, ), # 3
+    (4, TType.DOUBLE, 'sizeCacheMemory', None, None, ), # 4
+    (5, TType.DOUBLE, 'iMemoryValue', None, None, ), # 5
+    (6, TType.DOUBLE, 'sizeAcumulateMemory', None, None, ), # 6
+    (7, TType.DOUBLE, 'bd', None, None, ), # 7
+    (8, TType.DOUBLE, 'cd', None, None, ), # 8
+    (9, TType.I32, 'randomSaltos', None, None, ), # 9
   )
 
-  def __init__(self, listMIss=None, frequency=None, sizeCacheMemory=None, iMemoryValue=None, sizeAcumulateMemory=None, bd=None, cd=None, randomSaltos=None,):
+  def __init__(self, listMIss=None, listCache=None, frequency=None, sizeCacheMemory=None, iMemoryValue=None, sizeAcumulateMemory=None, bd=None, cd=None, randomSaltos=None,):
     self.listMIss = listMIss
+    self.listCache = listCache
     self.frequency = frequency
     self.sizeCacheMemory = sizeCacheMemory
     self.iMemoryValue = iMemoryValue
@@ -468,44 +498,54 @@ class hillClimbingRandom_args:
       if fid == 1:
         if ftype == TType.LIST:
           self.listMIss = []
-          (_etype10, _size7) = iprot.readListBegin()
-          for _i11 in xrange(_size7):
-            _elem12 = iprot.readDouble()
-            self.listMIss.append(_elem12)
+          (_etype17, _size14) = iprot.readListBegin()
+          for _i18 in xrange(_size14):
+            _elem19 = iprot.readDouble()
+            self.listMIss.append(_elem19)
           iprot.readListEnd()
         else:
           iprot.skip(ftype)
       elif fid == 2:
-        if ftype == TType.DOUBLE:
-          self.frequency = iprot.readDouble()
+        if ftype == TType.LIST:
+          self.listCache = []
+          (_etype23, _size20) = iprot.readListBegin()
+          for _i24 in xrange(_size20):
+            _elem25 = iprot.readDouble()
+            self.listCache.append(_elem25)
+          iprot.readListEnd()
         else:
           iprot.skip(ftype)
       elif fid == 3:
         if ftype == TType.DOUBLE:
-          self.sizeCacheMemory = iprot.readDouble()
+          self.frequency = iprot.readDouble()
         else:
           iprot.skip(ftype)
       elif fid == 4:
         if ftype == TType.DOUBLE:
-          self.iMemoryValue = iprot.readDouble()
+          self.sizeCacheMemory = iprot.readDouble()
         else:
           iprot.skip(ftype)
       elif fid == 5:
         if ftype == TType.DOUBLE:
-          self.sizeAcumulateMemory = iprot.readDouble()
+          self.iMemoryValue = iprot.readDouble()
         else:
           iprot.skip(ftype)
       elif fid == 6:
         if ftype == TType.DOUBLE:
-          self.bd = iprot.readDouble()
+          self.sizeAcumulateMemory = iprot.readDouble()
         else:
           iprot.skip(ftype)
       elif fid == 7:
         if ftype == TType.DOUBLE:
-          self.cd = iprot.readDouble()
+          self.bd = iprot.readDouble()
         else:
           iprot.skip(ftype)
       elif fid == 8:
+        if ftype == TType.DOUBLE:
+          self.cd = iprot.readDouble()
+        else:
+          iprot.skip(ftype)
+      elif fid == 9:
         if ftype == TType.I32:
           self.randomSaltos = iprot.readI32()
         else:
@@ -523,36 +563,43 @@ class hillClimbingRandom_args:
     if self.listMIss is not None:
       oprot.writeFieldBegin('listMIss', TType.LIST, 1)
       oprot.writeListBegin(TType.DOUBLE, len(self.listMIss))
-      for iter13 in self.listMIss:
-        oprot.writeDouble(iter13)
+      for iter26 in self.listMIss:
+        oprot.writeDouble(iter26)
+      oprot.writeListEnd()
+      oprot.writeFieldEnd()
+    if self.listCache is not None:
+      oprot.writeFieldBegin('listCache', TType.LIST, 2)
+      oprot.writeListBegin(TType.DOUBLE, len(self.listCache))
+      for iter27 in self.listCache:
+        oprot.writeDouble(iter27)
       oprot.writeListEnd()
       oprot.writeFieldEnd()
     if self.frequency is not None:
-      oprot.writeFieldBegin('frequency', TType.DOUBLE, 2)
+      oprot.writeFieldBegin('frequency', TType.DOUBLE, 3)
       oprot.writeDouble(self.frequency)
       oprot.writeFieldEnd()
     if self.sizeCacheMemory is not None:
-      oprot.writeFieldBegin('sizeCacheMemory', TType.DOUBLE, 3)
+      oprot.writeFieldBegin('sizeCacheMemory', TType.DOUBLE, 4)
       oprot.writeDouble(self.sizeCacheMemory)
       oprot.writeFieldEnd()
     if self.iMemoryValue is not None:
-      oprot.writeFieldBegin('iMemoryValue', TType.DOUBLE, 4)
+      oprot.writeFieldBegin('iMemoryValue', TType.DOUBLE, 5)
       oprot.writeDouble(self.iMemoryValue)
       oprot.writeFieldEnd()
     if self.sizeAcumulateMemory is not None:
-      oprot.writeFieldBegin('sizeAcumulateMemory', TType.DOUBLE, 5)
+      oprot.writeFieldBegin('sizeAcumulateMemory', TType.DOUBLE, 6)
       oprot.writeDouble(self.sizeAcumulateMemory)
       oprot.writeFieldEnd()
     if self.bd is not None:
-      oprot.writeFieldBegin('bd', TType.DOUBLE, 6)
+      oprot.writeFieldBegin('bd', TType.DOUBLE, 7)
       oprot.writeDouble(self.bd)
       oprot.writeFieldEnd()
     if self.cd is not None:
-      oprot.writeFieldBegin('cd', TType.DOUBLE, 7)
+      oprot.writeFieldBegin('cd', TType.DOUBLE, 8)
       oprot.writeDouble(self.cd)
       oprot.writeFieldEnd()
     if self.randomSaltos is not None:
-      oprot.writeFieldBegin('randomSaltos', TType.I32, 8)
+      oprot.writeFieldBegin('randomSaltos', TType.I32, 9)
       oprot.writeI32(self.randomSaltos)
       oprot.writeFieldEnd()
     oprot.writeFieldStop()
@@ -565,6 +612,7 @@ class hillClimbingRandom_args:
   def __hash__(self):
     value = 17
     value = (value * 31) ^ hash(self.listMIss)
+    value = (value * 31) ^ hash(self.listCache)
     value = (value * 31) ^ hash(self.frequency)
     value = (value * 31) ^ hash(self.sizeCacheMemory)
     value = (value * 31) ^ hash(self.iMemoryValue)

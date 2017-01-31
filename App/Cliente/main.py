@@ -119,7 +119,8 @@ if __name__ == '__main__':
 					for x in listFile:
 					## aqui va la funcion que manda dos listas ,lista de hit , lista de miss, parametros bd,cd, frecuencia
 						listMiss = x['miss'].tolist()
-						valueMemory = client.hillClimbingSimple(listMiss,frecuencia,int(args['total_cache']),iMemoryValue,sizeAcumulateMemory,tiempo_hits,tiempo_miss)
+						listCache = x['cache'].tolist()
+						valueMemory = client.hillClimbingSimple(listMiss,listCache,frecuencia,int(args['total_cache']),iMemoryValue,sizeAcumulateMemory,tiempo_hits,tiempo_miss)
 						iMemoryValue = valueMemory
 						sizeAcumulateMemory = sizeAcumulateMemory + valueMemory
 						print("********************************************** \n")
@@ -143,7 +144,8 @@ if __name__ == '__main__':
 					for x in listFile:
 				 		## aqui va la funcion que manda dos listas ,lista de hit , lista de miss, parametros bd,cd, frecuencia
 				 		listMiss = x['miss'].tolist()
-				 		valueMemory = client.hillClimbingRandom(listMiss,frecuencia,int(args['total_cache']),iMemoryValue,sizeAcumulateMemory,tiempo_hits,tiempo_miss,int(randomSaltos))
+				 		listCache = x['cache'].tolist()
+				 		valueMemory = client.hillClimbingRandom(listMiss,listCache,frecuencia,int(args['total_cache']),iMemoryValue,sizeAcumulateMemory,tiempo_hits,tiempo_miss,int(randomSaltos))
 				 		iMemoryValue = valueMemory
 				 		sizeAcumulateMemory = sizeAcumulateMemory + valueMemory
 					 	print("************************************************ \n")

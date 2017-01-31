@@ -24,8 +24,8 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
   print('Usage: ' + sys.argv[0] + ' [-h host[:port]] [-u url] [-f[ramed]] [-s[sl]] function [arg1 [arg2...]]')
   print('')
   print('Functions:')
-  print('  double hillClimbingSimple( listMiss, double frequency, double sizeCacheMemory, double iMemoryValue, double sizeAcumulateMemory, double bd, double cd)')
-  print('  double hillClimbingRandom( listMIss, double frequency, double sizeCacheMemory, double iMemoryValue, double sizeAcumulateMemory, double bd, double cd, i32 randomSaltos)')
+  print('  double hillClimbingSimple( listMiss,  listCache, double frequency, double sizeCacheMemory, double iMemoryValue, double sizeAcumulateMemory, double bd, double cd)')
+  print('  double hillClimbingRandom( listMIss,  listCache, double frequency, double sizeCacheMemory, double iMemoryValue, double sizeAcumulateMemory, double bd, double cd, i32 randomSaltos)')
   print('')
   sys.exit(0)
 
@@ -83,16 +83,16 @@ client = servicioPartioningMemory.Client(protocol)
 transport.open()
 
 if cmd == 'hillClimbingSimple':
-  if len(args) != 7:
-    print('hillClimbingSimple requires 7 args')
+  if len(args) != 8:
+    print('hillClimbingSimple requires 8 args')
     sys.exit(1)
-  pp.pprint(client.hillClimbingSimple(eval(args[0]),eval(args[1]),eval(args[2]),eval(args[3]),eval(args[4]),eval(args[5]),eval(args[6]),))
+  pp.pprint(client.hillClimbingSimple(eval(args[0]),eval(args[1]),eval(args[2]),eval(args[3]),eval(args[4]),eval(args[5]),eval(args[6]),eval(args[7]),))
 
 elif cmd == 'hillClimbingRandom':
-  if len(args) != 8:
-    print('hillClimbingRandom requires 8 args')
+  if len(args) != 9:
+    print('hillClimbingRandom requires 9 args')
     sys.exit(1)
-  pp.pprint(client.hillClimbingRandom(eval(args[0]),eval(args[1]),eval(args[2]),eval(args[3]),eval(args[4]),eval(args[5]),eval(args[6]),eval(args[7]),))
+  pp.pprint(client.hillClimbingRandom(eval(args[0]),eval(args[1]),eval(args[2]),eval(args[3]),eval(args[4]),eval(args[5]),eval(args[6]),eval(args[7]),eval(args[8]),))
 
 else:
   print('Unrecognized method %s' % cmd)
