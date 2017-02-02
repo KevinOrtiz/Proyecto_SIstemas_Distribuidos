@@ -20,7 +20,7 @@ public class Algorithm implements servicioPartioningMemory.Iface {
         double valueEAT;
         int indexCacheValue = 0;
         double actualValueMemory;
-        double pastValueMemory=-0;
+        double pastValueMemory=0;
         double candidateValueMemory;
         for(int i= 0; i < listMiss.size();i++){
             valueEAT = EAT(listMiss.get(i),bd,cd);
@@ -50,7 +50,7 @@ public class Algorithm implements servicioPartioningMemory.Iface {
         int saltos = 0;
         int contadorColina = 0;
         double actualValueMemory;
-        double pastValueMemory=-0;
+        double pastValueMemory=0;
         double valueEAT;
         double candidateValueMemory=0;
         double valueMemory = 0;

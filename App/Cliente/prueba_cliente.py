@@ -108,69 +108,48 @@ if __name__ == '__main__':
 
 		listFile = getFileCollection(args["ruta_directorio"])
 		if (listFile != False):
-			while(Salir != 0):
 				iMemoryValue = 0
 				sizeAcumulateMemory = 0
-				print "Usted podra probar dos algoritmos"
-				print "1.-Hill climbing simple"
-				print "2.-Hill climbing de reinicio aleatorio"
-				print "3.-Salir"
-				opcionAlgoritmo = raw_input("ingrese las opcion(debe ser numerica)")
-				if (opcionAlgoritmo == '1'):
-					i = 1
-					for x in listFile:
+				sizeAcumulateMemory1 = 0
+				iMemoryValue1 = 0
+				i = 1
+				j = 1
+				for x in listFile:
 					## aqui va la funcion que manda dos listas ,lista de hit , lista de miss, parametros bd,cd, frecuencia
-						listMiss = x['miss'].tolist()
-						listCache = x['cache'].tolist()
-						valueMemory = client.hillClimbingSimple(listMiss,listCache,frecuencia,float(args['total_cache']),iMemoryValue,sizeAcumulateMemory,tiempo_hits,tiempo_miss)
-						if valueMemory == 0:
-							valueMemory = float(args['total_cache']) - sizeAcumulateMemory
-						iMemoryValue = valueMemory
-						sizeAcumulateMemory = sizeAcumulateMemory + valueMemory
-						print("************************************************ \n")
-					 	print("workload_"+ str(i) + "----> valueMemory:" + str(valueMemory))
-					 	print("\n")
-					 	print("size_Acumulate_Memory--->" + str(sizeAcumulateMemory))
-				 		print("\n")
-				 		print("************************************************* \n")
-				 		i = i + 1
-					'''
-					En esta parte de declara el metodo remoto que sera la funcion Hill climbing 
-					que tendra como parametro frecuencia,cd,bd,M,m,listaHit,listMiss 
-					y retorna el valor de asignacion en memoria cache m{i,1,2,3,4}
-					'''
+					listMiss = x['miss'].tolist()
+					listCache = x['cache'].tolist()
+					valueMemory = client.hillClimbingSimple(listMiss,listCache,frecuencia,float(args['total_cache']),iMemoryValue,sizeAcumulateMemory,tiempo_hits,tiempo_miss)
+					if valueMemory == 0:
+						valueMemory = float(args['total_cache']) - sizeAcumulateMemory
+					iMemoryValue = valueMemory
+					sizeAcumulateMemory = sizeAcumulateMemory + valueMemory
+					print("************************************************ \n")
+				 	print("workload_"+ str(i) + "----> valueMemory:" + str(valueMemory))
+				 	print("\n")
+				 	print("size_Acumulate_Memory--->" + str(sizeAcumulateMemory))
+			 		print("\n")
+			 		print("************************************************* \n")
+			 		i = i + 1
+				randomSaltos = 5
+				for y in listFile:	 		
+			 		listMiss1 = y['miss'].tolist()
+			 		listCache1 = y['cache'].tolist()
+			 		valueMemory1 = client.hillClimbingRandom(listMiss1,listCache1,frecuencia,float(args['total_cache']),iMemoryValue1,sizeAcumulateMemory1,tiempo_hits,tiempo_miss,int(randomSaltos))
+			 		if valueMemory1== 0:
+			 			valueMemory1 = float(args['total_cache'])-sizeAcumulateMemory1
+			 		iMemoryValue1 = valueMemory1
+			 		sizeAcumulateMemory1 = sizeAcumulateMemory1 + valueMemory1
+				 	print("************************************************ \n")
+				 	print("workload_"+ str(j) + "----> valueMemory:" + str(valueMemory1))
+				 	print("\n")
+				 	print("size_Acumulate_Memory--->" + str(sizeAcumulateMemory1))
+			 		print("\n")
+			 		print("************************************************* \n")
+			 		
+			 		j = j + 1
+				print "Servicio Finalizado"
+				transportBuffering.close()
 
-				elif (opcionAlgoritmo == '2'):
-					sizeAcumulateMemory = 0
-					iMemoryValue = 0
-					i = 1
-					randomSaltos = raw_input("Ingrese el numero de saltos que desea que realice el algoritmo")
-					#andomSaltos = 3
-					for x in listFile:
-				 		## aqui va la funcion que manda dos listas ,lista de hit , lista de miss, parametros bd,cd, frecuencia
-				 		listMiss = x['miss'].tolist()
-				 		listCache = x['cache'].tolist()
-				 		valueMemory = client.hillClimbingRandom(listMiss,listCache,frecuencia,float(args['total_cache']),iMemoryValue,sizeAcumulateMemory,tiempo_hits,tiempo_miss,int(randomSaltos))
-				 		if valueMemory== 0:
-				 			valueMemory = float(args['total_cache'])-sizeAcumulateMemory
-				 		iMemoryValue = valueMemory
-				 		sizeAcumulateMemory = sizeAcumulateMemory + valueMemory
-					 	print("************************************************ \n")
-					 	print("workload_"+ str(i) + "----> valueMemory:" + str(valueMemory))
-					 	print("\n")
-					 	print("size_Acumulate_Memory--->" + str(sizeAcumulateMemory))
-				 		print("\n")
-				 		print("************************************************* \n")
-				 		i = i + 1
-
-				elif (opcionAlgoritmo == '3'):
-					print "Servicio Finalizado"
-					Salir = 0
-					transportBuffering.close()
-
-				else:
-					print "Ingrese una opcion correcta!"
-	
 
 	except Thrift.TException, tx:
 		print '%s' % (tx.message)
