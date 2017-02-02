@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import os
 import argparse
+import time
 import sys, glob
 sys.path.append('gen-py')
 from algoritmos import servicioPartioningMemory
@@ -64,6 +65,7 @@ if __name__ == '__main__':
 
 	args = vars(ap.parse_args())
 	Salir = 1
+	file = open(args["ruta_guarda"],"w+")
 	try:
 		
 		if (args["frecuencia"] is None ):
@@ -118,33 +120,43 @@ if __name__ == '__main__':
 					## aqui va la funcion que manda dos listas ,lista de hit , lista de miss, parametros bd,cd, frecuencia
 					listMiss = x['miss'].tolist()
 					listCache = x['cache'].tolist()
+					startLatency_simple = time.time()
 					valueMemory = client.hillClimbingSimple(listMiss,listCache,frecuencia,float(args['total_cache']),iMemoryValue,sizeAcumulateMemory,tiempo_hits,tiempo_miss)
+					endLatency_simple = time.time()
 					if valueMemory == 0:
 						valueMemory = float(args['total_cache']) - sizeAcumulateMemory
 					iMemoryValue = valueMemory
 					sizeAcumulateMemory = sizeAcumulateMemory + valueMemory
-					print("************************************************ \n")
+					valueTimeHillClimbingSimple = -startLatency_simple + endLatency_simple
+					print("*******************HILL CLIMBING SIMPLE **************************** \n")
 				 	print("workload_"+ str(i) + "----> valueMemory:" + str(valueMemory))
 				 	print("\n")
 				 	print("size_Acumulate_Memory--->" + str(sizeAcumulateMemory))
 			 		print("\n")
+			 		print("Tiempo de Hill climbing Simple = " + str(valueTimeHillClimbingSimple))
 			 		print("************************************************* \n")
+			 		file.write(" " +  str(valueTimeHillClimbingSimple) + "  " + "hs" + "\n")
 			 		i = i + 1
 				randomSaltos = 5
 				for y in listFile:	 		
 			 		listMiss1 = y['miss'].tolist()
 			 		listCache1 = y['cache'].tolist()
+			 		startLatency_random = time.time()
 			 		valueMemory1 = client.hillClimbingRandom(listMiss1,listCache1,frecuencia,float(args['total_cache']),iMemoryValue1,sizeAcumulateMemory1,tiempo_hits,tiempo_miss,int(randomSaltos))
+			 		endLatency_random = time.time()
 			 		if valueMemory1== 0:
 			 			valueMemory1 = float(args['total_cache'])-sizeAcumulateMemory1
 			 		iMemoryValue1 = valueMemory1
 			 		sizeAcumulateMemory1 = sizeAcumulateMemory1 + valueMemory1
-				 	print("************************************************ \n")
+			 		valueTimeHillClimbingRandom = -startLatency_random + endLatency_random
+				 	print("********************HILL CLIMBING RANDOM ********************** \n")
 				 	print("workload_"+ str(j) + "----> valueMemory:" + str(valueMemory1))
 				 	print("\n")
 				 	print("size_Acumulate_Memory--->" + str(sizeAcumulateMemory1))
 			 		print("\n")
+			 		print("Tiempo de Hill Climbing Random = " + str(valueTimeHillClimbingRandom))
 			 		print("************************************************* \n")
+			 		file.write(" " +  str(valueTimeHillClimbingRandom) + "  " + "hR" + "\n")
 			 		
 			 		j = j + 1
 				print "Servicio Finalizado"
